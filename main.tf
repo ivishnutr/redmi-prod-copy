@@ -55,3 +55,37 @@ resource "aws_security_group" "http_access" {
     #owner   = var.project_owner
   }
 }
+
+
+#----------------------------------
+# remote security creation
+#----------------------------------
+
+resource "aws_security_group" "remote_access" {
+  name        = "${var.project_name}-${var.project_env}-remote-acess"
+  description = "${var.project_name}-${var.project_env}-remote-acess"
+
+  ingress {
+    description      = "TLS from VPC"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.project_env}-remote-access"
+    #project = var.project_name
+    #env     = var.project_env
+    #owner   = var.project_owner
+  }
+}
