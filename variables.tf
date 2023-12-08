@@ -24,3 +24,8 @@ variable "project_env" {
   description = "project environment "
   default = "production"
 }
+ 
+variable "region"{
+type =string
+default="ap-south-1"
+}
