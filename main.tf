@@ -89,3 +89,28 @@ resource "aws_security_group" "remote_access" {
     #owner   = var.project_owner
   }
 }
+
+
+#----------------------------------
+# instance  creation
+#----------------------------------
+
+resource "aws_instance" "frontend" {
+  ami                    = var.ami_id
+  instance_type          = var.instance_type
+  user_data              = file("setup.sh")
+  key_name               = aws_key_pair.auth_key.key_name
+  vpc_security_group_ids = [aws_security_group.http_access.id, aws_security_group.remote_access.id]
+
+  tags = {
+    Name = "${var.project_name}-${var.project_env}-frontend"
+    #project = var.project_name
+    #env     = var.project_env
+    #owner   = var.project_owner
+  }
+
+  lifecycle {                      #add lifecycle
+    create_before_destroy = true   #1st create resource then delete. to avoid down time
+    ignore_changes        = [tags,instance_type] #ignore changes of resource that created from console
+  }
+}
