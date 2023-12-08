@@ -123,3 +123,20 @@ resource "aws_instance" "frontend" {
     ignore_changes        = [tags,instance_type] #ignore changes of resource that created from console
   }
 }
+
+
+#-----------------------------------
+# elastic ip for ec2 instance
+#-----------------------------------
+
+resource "aws_eip" "frontend" {
+  instance = aws_instance.frontend.id
+  domain   = "vpc"
+
+  tags = {
+    Name = "${var.project_name}-${var.project_env}-frontend"
+    # project = var.project_name
+    # env     = var.project_env
+    # owner   = var.project_owner
+  }
+}
